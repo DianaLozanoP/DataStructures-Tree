@@ -59,26 +59,24 @@ class BinaryTree {
    * The path doesn't need to start at the root, but you can't visit a node more than once. */
 
   maxSum() {
-    let toVisitQueue = [this.root];
-    let sum = 0;
-    let level = 0
-    while (toVisitQueue.length) {
-      let current = toVisitQueue.shift()
-      if (current === null) {
-        return sum;
-      }
-      sum += current.val;
-      level++;
-      if (current.left !== null && current.right !== null) {
-        if (level < 3) {
-          level--;
-          toVisitQueue.push(current.left)
-          toVisitQueue.push(current.right)
-        }
+    let total_sum = 0;
 
+    //recursive function, it will calculate the max for each subtree
+    function sumEachSide(node) {
+      if (node === null) {
+        return 0;
       }
+      const leftSum = Math.max(0, sumEachSide(node.left))
+      const rightSum = Math.max(0, sumEachSide(node.right))
+      //calculate total including the current node
+      const currentPathSum = node.val + leftSum + rightSum
+      //update total_su,
+      total_sum = Math.max(total_sum, currentPathSum)
+      //compare again values, right side vs left vs 0
+      return Math.max(0, leftSum + node.val, rightSum + node.val)
     }
-    return count;
+    sumEachSide(this.root)
+    return total_sum;
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
